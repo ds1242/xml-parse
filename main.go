@@ -5,11 +5,13 @@ import (
 	"encoding/xml"
 	"fmt"
 	"os"
+	"io"
 	"strings"
 
-	"golang.org/x/text/transform"
-    "golang.org/x/text/encoding/unicode"
 	"golang.org/x/net/html/charset"
+	"golang.org/x/text/encoding"
+	"golang.org/x/text/encoding/unicode"
+	"golang.org/x/text/transform"
 )
 
 func main() {
@@ -24,7 +26,13 @@ func main() {
 
 	utf8Reader := transform.NewReader(xmlFile, unicode.UTF8.NewDecoder())
 	decoder := xml.NewDecoder(utf8Reader)
-	decoder.CharsetReader = charset.NewReaderLabel
+	decoder.CharsetReader = func(charset string, input io.Reader) (io.Reader, error) {
+		enc, err := determineEncoding(input)
+		if err != nil {
+			return nil, err
+		}
+		return transform.NewReader(input, enc.NewDecoder()), nil
+	}
 
 	// Create the CSV File
 	csvFile, err := os.Create("output.csv")
@@ -33,6 +41,9 @@ func main() {
 		return
 	}
 	defer csvFile.Close()
+
+	// Add UTF-8 BOM for Excel compatability
+	csvFile.Write([]byte{0xEF, 0xBB, 0xBF})
 	// Create the Writer
 	writer := csv.NewWriter(csvFile)
 	defer writer.Flush()
@@ -97,7 +108,7 @@ func main() {
 				post.Isbn = postmeta.MetaValue
 			case "book_cover":
 				post.BookCover = postmeta.MetaValue
-			// Add more cases as needed for additional metadata fields
+				// Add more cases as needed for additional metadata fields
 			}
 		}
 		PostSlice = append(PostSlice, post)
@@ -125,4 +136,18 @@ func main() {
 	}
 
 	fmt.Printf("Processed %d posts and wrote them to output.csv\n", len(PostSlice))
+}
+
+
+
+
+func determineEncoding(r io.Reader) (encoding.Encoding, error) {
+	// Read a small chunk to detect encoding
+	b, err := io.ReadAll(io.LimitReader(r, 1024))
+	if err != nil {
+		return unicode.UTF8, err
+	}
+	
+	e, _, _ := charset.DetermineEncoding(b, "")
+	return e, nil
 }
