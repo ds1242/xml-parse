@@ -4,9 +4,9 @@ import (
 	"encoding/xml"
 	"encoding/csv"
 	"fmt"
-	"io"
 	"os"
 	"strings"
+	"golang.org/x/net/html/charset"
 )
 
 func main() {
@@ -19,11 +19,8 @@ func main() {
 	fmt.Println("file opened")
 	defer xmlFile.Close()
 
-	byteValue, err := io.ReadAll(xmlFile)
-	if err != nil {
-		fmt.Printf("error reading file content: %v\n", err)
-		return
-	}
+	decoder := xml.NewDecoder(xmlFile)
+	decoder.CharsetReader = charset.NewReaderLabel
 
 	// Create the CSV File
 	csvFile, err := os.Create("output.csv")
@@ -41,9 +38,9 @@ func main() {
 	writer.Write(header)
 
 	var postFeed BookPlate
-	err = xml.Unmarshal(byteValue, &postFeed)
+	err = decoder.Decode(&postFeed)
 	if err != nil {
-		fmt.Printf("error unmarshalling xml: %v\n", err)
+		fmt.Printf("error decoding xml: %v\n", err)
 		return
 	}
 
@@ -117,6 +114,7 @@ func main() {
 			post.ChosenReason,
 			post.Statement,
 			post.CatalogRecord,
+			post.BookCover,
 		}
 		writer.Write(record)
 
