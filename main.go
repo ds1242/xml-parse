@@ -77,6 +77,8 @@ func main() {
 				post.College = postmeta.MetaValue
 			case "author":
 				post.Author = postmeta.MetaValue
+			case "book_chose":
+				post.BookChoice = postmeta.MetaValue
 			case "statement":
 				post.Statement = postmeta.MetaValue
 			case "catalog_record":
@@ -89,11 +91,18 @@ func main() {
 		// Write to CSV
 		record := []string{
 			post.PostID,
-			post.BookTitle,
 			post.HonoreeName,
 			post.FirstName,
 			post.LastName,
+			post.Department,
+			post.College,
 			post.BookTitle,
+			post.Author,
+			post.Genre,
+			post.Isbn,
+			post.ChosenReason,
+			post.Statement,
+			post.CatalogRecord,
 		}
 		writer.Write(record)
 
