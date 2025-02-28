@@ -2,8 +2,11 @@ package main
 
 import (
 	"fmt"
+	"os"
+	"encoding/xml"
+
 )
 
 func main() {
-	fmt.Println("Hello World")
+	xmlFile, err := os.Open("")
 }
