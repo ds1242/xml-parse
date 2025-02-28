@@ -85,4 +85,6 @@ type Post struct {
 	Genre        string
 	Isbn         string
 	ChosenReason string
+	Statement 	string
+	CatalogRecord string
 }

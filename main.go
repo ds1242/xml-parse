@@ -67,13 +67,20 @@ func main() {
 				post.FirstName = postmeta.MetaValue
 			case "last_name":
 				post.LastName = postmeta.MetaValue
+			case "notes_from_honoree":
+				post.ChosenReason = postmeta.MetaValue
 			case "book_title":
 				post.BookTitle = postmeta.MetaValue
 			case "department":
 				post.Department = postmeta.MetaValue
 			case "college":
 				post.College = postmeta.MetaValue
-			case "author"
+			case "author":
+				post.Author = postmeta.MetaValue
+			case "statement":
+				post.Statement = postmeta.MetaValue
+			case "catalog_record":
+				post.CatalogRecord = postmeta.MetaValue
 			// Add more cases as needed for additional metadata fields
 			}
 		}
@@ -92,5 +99,5 @@ func main() {
 
 	}
 
-
+	fmt.Printf("Processed %d posts and wrote them to output.csv\n", len(PostSlice))
 }
