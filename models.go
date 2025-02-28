@@ -82,7 +82,7 @@ type Post struct {
 	College       string
 	BookTitle     string
 	Author        string
-	BookChoice    stri
+	BookChoice    string
 	Genre         string
 	Isbn          string
 	ChosenReason  string
