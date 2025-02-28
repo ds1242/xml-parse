@@ -37,7 +37,7 @@ func main() {
 	defer writer.Flush()
 
 	// Write CSV header
-	header := []string{"PostID", "BookTitle", "HonoreeName", "FirstName", "LastName", "Title"}
+	header := []string{"PostID", "Book Plate Year", "HonoreeName", "FirstName", "LastName", "Department", "College", "Book Title", "Author", "Genre", "Isbn", "Chosen Reason", "Statement", "Catalog Record", "Book Cover"}
 	writer.Write(header)
 
 	var postFeed BookPlate
@@ -52,6 +52,15 @@ func main() {
 		post := Post{
 			PostID:      item.PostID,
 			HonoreeName: item.Title,
+		}
+
+		for _, category := range item.Category {
+			if category.Domain == "bookplate_year" {
+				post.BookPlateYear = category.Nicename
+			}
+			if category.Domain == "bookplate_genre" {
+				post.Genre = append(post.Genre, category.Nicename)
+			}
 		}
 
 		// Extract metadata
@@ -77,12 +86,16 @@ func main() {
 				post.College = postmeta.MetaValue
 			case "author":
 				post.Author = postmeta.MetaValue
-			case "book_chose":
+			case "book_choice":
 				post.BookChoice = postmeta.MetaValue
 			case "statement":
 				post.Statement = postmeta.MetaValue
 			case "catalog_record":
 				post.CatalogRecord = postmeta.MetaValue
+			case "isbn":
+				post.Isbn = postmeta.MetaValue
+			case "book_cover":
+				post.BookCover = postmeta.MetaValue
 			// Add more cases as needed for additional metadata fields
 			}
 		}
@@ -91,6 +104,7 @@ func main() {
 		// Write to CSV
 		record := []string{
 			post.PostID,
+			post.BookPlateYear,
 			post.HonoreeName,
 			post.FirstName,
 			post.LastName,
@@ -98,7 +112,7 @@ func main() {
 			post.College,
 			post.BookTitle,
 			post.Author,
-			post.Genre,
+			strings.Join(post.Genre, ", "),
 			post.Isbn,
 			post.ChosenReason,
 			post.Statement,

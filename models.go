@@ -75,6 +75,7 @@ type BookPlate struct {
 
 type Post struct {
 	PostID        string
+	BookPlateYear string
 	HonoreeName   string
 	FirstName     string
 	LastName      string
@@ -83,9 +84,10 @@ type Post struct {
 	BookTitle     string
 	Author        string
 	BookChoice    string
-	Genre         string
+	Genre         []string
 	Isbn          string
 	ChosenReason  string
 	Statement     string
 	CatalogRecord string
+	BookCover     string
 }
