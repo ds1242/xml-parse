@@ -1,11 +1,14 @@
 package main
 
 import (
-	"encoding/xml"
 	"encoding/csv"
+	"encoding/xml"
 	"fmt"
 	"os"
 	"strings"
+
+	"golang.org/x/text/transform"
+    "golang.org/x/text/encoding/unicode"
 	"golang.org/x/net/html/charset"
 )
 
@@ -19,7 +22,8 @@ func main() {
 	fmt.Println("file opened")
 	defer xmlFile.Close()
 
-	decoder := xml.NewDecoder(xmlFile)
+	utf8Reader := transform.NewReader(xmlFile, unicode.UTF8.NewDecoder())
+	decoder := xml.NewDecoder(utf8Reader)
 	decoder.CharsetReader = charset.NewReaderLabel
 
 	// Create the CSV File
