@@ -74,11 +74,14 @@ type BookPlate struct {
 }
 
 type Post struct {
-	PostID       int
+	PostID       string
 	HonoreeName  string
+	FirstName    string
+	LastName     string
 	Department   string
 	College      string
 	BookTitle    string
+	Author 		string
 	Genre        string
 	Isbn         string
 	ChosenReason string
