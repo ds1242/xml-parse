@@ -49,7 +49,7 @@ func main() {
 	defer writer.Flush()
 
 	// Write CSV header
-	header := []string{"PostID", "Book Plate Year", "HonoreeName", "FirstName", "LastName", "Department", "College", "Book Title", "Author", "Genre", "Isbn", "Chosen Reason", "Statement", "Catalog Record", "Book Cover"}
+	header := []string{"PostID", "Book Plate Year", "HonoreeName", "FirstName", "LastName", "Department", "College", "Book Title", "Author", "Genre", "Isbn", "Notes from Honoree", "Book Choice", "Statement", "Catalog Record", "Book Cover"}
 	writer.Write(header)
 
 	var postFeed BookPlate
@@ -127,6 +127,7 @@ func main() {
 			strings.Join(post.Genre, ", "),
 			post.Isbn,
 			post.ChosenReason,
+			post.BookChoice,
 			post.Statement,
 			post.CatalogRecord,
 			post.BookCover,
